@@ -22,18 +22,19 @@
 #pragma once
 
 #include "../inc/MarlinConfigPre.h"
+#include <SlowSoftI2CMaster.h>
 
-#include <Wire.h>
-#include <INA226.h>
 
 class Ammeter {
 private:
-  static float scale;
-
+  static uint32_t currentLSB;
 public:
+  static int sensor_type;
   static float current;
   static void init();
-  static float read();
+  static float read(); //read default channel (preserved for backward compatibility)
+  static int16_t readVoltage(uint8_t channel); // read specified channel (returns mV)
+  static float read(uint8_t channel); //read specified channel (returns mA)
 };
 
 extern Ammeter ammeter;

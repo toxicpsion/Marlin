@@ -260,6 +260,9 @@
 #if ENABLED(EASYTHREED_UI)
   #include "feature/easythreed_ui.h"
 #endif
+#if ENABLED(I2C_AMMETER)
+  #include "feature/ammeter.h"
+#endif
 
 #if ENABLED(MARLIN_TEST_BUILD)
   #include "tests/marlin_tests.h"
@@ -854,6 +857,7 @@ void idle(const bool no_stepper_sleep/*=false*/) {
   #if HAS_AUTO_REPORTING
     if (!gcode.autoreport_paused) {
       TERN_(AUTO_REPORT_TEMPERATURES, thermalManager.auto_reporter.tick());
+      // TERN_(AUTO_REPORT_I2C_AMMETER, ammeter.  AUTOREPORTER ) //
       TERN_(AUTO_REPORT_FANS, fan_check.auto_reporter.tick());
       TERN_(AUTO_REPORT_SD_STATUS, card.auto_reporter.tick());
       TERN_(AUTO_REPORT_POSITION, position_auto_reporter.tick());
@@ -1289,6 +1293,10 @@ void setup() {
 
   #if ENABLED(WIFISUPPORT)
     SETUP_RUN(esp_wifi_init());
+  #endif
+
+  #if ENABLED(I2C_AMMETER)
+    SETUP_RUN(ammeter.init());
   #endif
 
   // Report Reset Reason
